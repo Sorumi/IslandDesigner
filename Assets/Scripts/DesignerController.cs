@@ -61,7 +61,7 @@ public class DesignerController : MonoBehaviour
 
     private void enterTerrainCellHandler(Vector2Int position)
     {
-        Debug.Log(position);
+        // Debug.Log(position);
 
         Vector2 posWS = new Vector2(position.x - IslandWidth / 2, - position.y + IslandHeight / 2);
         grid.SetPosition(posWS);
@@ -91,7 +91,6 @@ public class DesignerController : MonoBehaviour
                 }
         }
     }
-
 
     private TerrainViewFeature terrainViewFeatureOfPosition(Vector2Int position)
     {

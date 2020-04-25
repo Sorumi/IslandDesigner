@@ -38,6 +38,7 @@ public class TerrainMeshGenerator : MonoBehaviour
     private static Dictionary<TerrainViewFeature, Mesh> meshDictionary = new Dictionary<TerrainViewFeature, Mesh>(32);
 
     private Vector3[] vertices;
+    private Vector3[] normals;
     private Vector2[] uvs;
     private int[][] trianglesCell;
 
@@ -69,7 +70,10 @@ public class TerrainMeshGenerator : MonoBehaviour
         float p3 = 1.0f;
         float[] points = new float[] { p0, p1, p2, p3 };
 
+        Vector3 normal = new Vector3(0, 1, 0);
+
         vertices = new Vector3[16];
+        normals = new Vector3[16];
         uvs = new Vector2[16];
 
         Vector3 offset = new Vector3(0.5f, 0.0f, 0.5f);
@@ -79,6 +83,7 @@ public class TerrainMeshGenerator : MonoBehaviour
             {
                 vertices[y * 4 + x] = new Vector3(points[x], 0, points[y]) - offset;
                 uvs[y * 4 + x] = new Vector2(points[x], points[y]);
+                normals[y * 4 + x] = normal;
             }
 
         trianglesCell = new int[9][];
@@ -117,6 +122,7 @@ public class TerrainMeshGenerator : MonoBehaviour
         Mesh mesh = new Mesh();
 
         mesh.vertices = vertices;
+        mesh.normals = normals;
         mesh.uv = uvs;
 
         List<int> triangleList = new List<int>();
