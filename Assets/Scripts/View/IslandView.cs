@@ -32,8 +32,8 @@ public class IslandView : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 TerrainCellView terrainCellView = Instantiate(terrainView, new Vector3(0, 0, 0), Quaternion.identity);
-                float posWSX = - (x - left + 1) + 0.5f;
-                float posWSZ = y - top + 0.5f;
+                float posWSX = x - left + 0.5f;
+                float posWSZ = -(y - top + 1) + 0.5f;
                 terrainCellView.transform.position = new Vector3(posWSX, 0, posWSZ);
 
                 terrainCellView.Init(x, y);

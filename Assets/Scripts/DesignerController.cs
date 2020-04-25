@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DesignerController : MonoBehaviour
 {
@@ -8,13 +9,14 @@ public class DesignerController : MonoBehaviour
     public int IslandHeight = 16;
 
     public TextureGenerator textureGenerator;
-    public Material material;
+    public MeshFilter meshFilter;
 
-    public GameObject IslandGameObject;
+    public GameObject IslandPrefab;
+
+    public HoverGrid grid;
 
     Island island;
     IslandView islandView;
-
 
     void OnGUI()
     {
@@ -22,20 +24,22 @@ public class DesignerController : MonoBehaviour
             initIsland();
 
         // if (GUI.Button(new Rect(50, 160, 100, 50), "Test Texture"))
-        //     TestTexture();
+        //     TestMesh();
     }
 
-    private void TestTexture()
-    {
-        TerrainViewFeature feature = new TerrainViewFeature(true, true, false, false, true, false, false, false, false);
-        Texture2D texture = TextureGenerator.Instance.GetTerrainTexture(feature);
-        material.SetTexture("_MainTex", texture);
-    }
+    // private void TestMesh()
+    // {
+    //     TerrainViewFeature feature = new TerrainViewFeature(true, true, false, false, true, false, false, false, false);
+    //     Mesh mesh = TerrainMeshGenerator.Instance.GetTerrainMesh(feature);
+    //     meshFilter.sharedMesh = mesh;
+    // }
 
     private void initIsland()
     {
         island = new Island(IslandWidth, IslandHeight);
-        islandView = IslandGameObject.GetComponent<IslandView>();
+
+        GameObject islandGameObject = Instantiate(IslandPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        islandView = islandGameObject.GetComponent<IslandView>();
         islandView.Init(IslandWidth, IslandHeight);
         islandView.OnEnterTerrainCell = enterTerrainCellHandler;
         islandView.OnReleaseTerrainCell = releaseTerrainCellHandler;
@@ -51,11 +55,16 @@ public class DesignerController : MonoBehaviour
                 islandView.SetTerrainFeature(position, terrainViewFeature);
             }
         }
+
+        grid.Init();
     }
 
     private void enterTerrainCellHandler(Vector2Int position)
     {
         Debug.Log(position);
+
+        Vector2 posWS = new Vector2(position.x - IslandWidth / 2, - position.y + IslandHeight / 2);
+        grid.SetPosition(posWS);
     }
 
     private void releaseTerrainCellHandler(Vector2Int position)

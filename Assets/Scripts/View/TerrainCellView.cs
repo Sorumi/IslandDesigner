@@ -41,6 +41,8 @@ public class TerrainCellView : MonoBehaviour
     TerrainViewFeature feature;
 
     MeshRenderer meshRenderer;
+    MeshFilter meshFilter;
+    MeshCollider meshCollider;
 
     MaterialPropertyBlock block;
 
@@ -61,18 +63,24 @@ public class TerrainCellView : MonoBehaviour
 
         this.position = new Vector2Int(x, y);
         meshRenderer = GetComponent<MeshRenderer>();
-        block = new MaterialPropertyBlock();
+        meshFilter = GetComponent<MeshFilter>();
+        meshCollider = GetComponent<MeshCollider>();
+        meshFilter.sharedMesh = null;
+        meshCollider.sharedMesh = TerrainMeshGenerator.Instance.Plane;
+        // block = new MaterialPropertyBlock();
 
-        meshRenderer.SetPropertyBlock(block);
+        // meshRenderer.SetPropertyBlock(block);
     }
 
     public void SetFeature(TerrainViewFeature feature)
     {
         this.feature = feature;
 
-        Texture2D texture = TextureGenerator.Instance.GetTerrainTexture(feature);
-        block.SetTexture("_MainTex", texture);
+        // Texture2D texture = TextureGenerator.Instance.GetTerrainTexture(feature);
+        // block.SetTexture("_MainTex", texture);
 
-        meshRenderer.SetPropertyBlock(block);
+        // meshRenderer.SetPropertyBlock(block);
+
+        meshFilter.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainMesh(feature);
     }
 }
