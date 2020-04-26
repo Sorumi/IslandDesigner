@@ -5,32 +5,35 @@ using UnityEngine;
 public struct TerrainViewFeature
 {
     public bool WaterCenter;
-    public bool WaterT;
+    public bool WaterF;
     public bool WaterL;
-    public bool WaterD;
+    public bool WaterB;
     public bool WaterR;
-    public bool WaterTL;
-    public bool WaterDL;
-    public bool WaterDR;
-    public bool WaterTR;
+    public bool WaterFL;
+    public bool WaterBL;
+    public bool WaterBR;
+    public bool WaterFR;
 
-    public TerrainViewFeature(bool waterCenter, bool waterT, bool waterL, bool waterD, bool waterR,
-     bool waterTL, bool waterDL, bool waterDR, bool waterTR)
+    public TerrainViewFeature(bool waterCenter, bool waterF, bool waterL, bool waterB, bool waterR,
+     bool waterFL, bool waterBL, bool waterBR, bool waterFR)
     {
         WaterCenter = waterCenter;
-        WaterT = waterT;
+        WaterF = waterF;
         WaterL = waterL;
-        WaterD = waterD;
+        WaterB = waterB;
         WaterR = waterR;
-        WaterTL = waterTL;
-        WaterDL = waterDL;
-        WaterDR = waterDR;
-        WaterTR = waterTR;
+        WaterFL = waterFL;
+        WaterBL = waterBL;
+        WaterBR = waterBR;
+        WaterFR = waterFR;
     }
 }
 
 public class TerrainCellView : MonoBehaviour
 {
+
+    public GameObject surface;
+    public GameObject inner;
 
     public Action<Vector2Int> OnEnter;
 
@@ -40,11 +43,9 @@ public class TerrainCellView : MonoBehaviour
 
     TerrainViewFeature feature;
 
-    MeshRenderer meshRenderer;
-    MeshFilter meshFilter;
-    MeshCollider meshCollider;
-
-    MaterialPropertyBlock block;
+    MeshCollider mc;
+    MeshFilter mfSurface;
+    MeshFilter mfInner;
 
     void OnMouseEnter()
     {
@@ -62,25 +63,19 @@ public class TerrainCellView : MonoBehaviour
     {
 
         this.position = new Vector2Int(x, y);
-        meshRenderer = GetComponent<MeshRenderer>();
-        meshFilter = GetComponent<MeshFilter>();
-        meshCollider = GetComponent<MeshCollider>();
-        meshFilter.sharedMesh = null;
-        meshCollider.sharedMesh = TerrainMeshGenerator.Instance.Plane;
-        // block = new MaterialPropertyBlock();
-
-        // meshRenderer.SetPropertyBlock(block);
+        mfSurface = surface.GetComponent<MeshFilter>();
+        mfInner = inner.GetComponent<MeshFilter>();
+        mc = GetComponent<MeshCollider>();
+        mfSurface.sharedMesh = null;
+        mfInner.sharedMesh = null;
+        mc.sharedMesh = TerrainMeshGenerator.Instance.Plane;
     }
 
     public void SetFeature(TerrainViewFeature feature)
     {
         this.feature = feature;
 
-        // Texture2D texture = TextureGenerator.Instance.GetTerrainTexture(feature);
-        // block.SetTexture("_MainTex", texture);
-
-        // meshRenderer.SetPropertyBlock(block);
-
-        meshFilter.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainMesh(feature);
+        mfSurface.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainSurfaceMesh(feature);
+        mfInner.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainInnerMesh(feature);
     }
 }

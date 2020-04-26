@@ -103,24 +103,24 @@ public class DesignerController : MonoBehaviour
         if (!waterCenter)
             return terrainViewFeature;
 
-        bool waterTop = island.TerrainTypeOfCell(new Vector2Int(x, y - 1)) == TerrainType.Water;
+        bool waterFront = island.TerrainTypeOfCell(new Vector2Int(x, y - 1)) == TerrainType.Water;
         bool waterLeft = island.TerrainTypeOfCell(new Vector2Int(x - 1, y)) == TerrainType.Water;
-        bool waterDown = island.TerrainTypeOfCell(new Vector2Int(x, y + 1)) == TerrainType.Water;
+        bool waterBack = island.TerrainTypeOfCell(new Vector2Int(x, y + 1)) == TerrainType.Water;
         bool waterRight = island.TerrainTypeOfCell(new Vector2Int(x + 1, y)) == TerrainType.Water;
-        bool waterTopLeft = island.TerrainTypeOfCell(new Vector2Int(x - 1, y - 1)) == TerrainType.Water;
-        bool waterDownLeft = island.TerrainTypeOfCell(new Vector2Int(x - 1, y + 1)) == TerrainType.Water;
-        bool waterDownRight = island.TerrainTypeOfCell(new Vector2Int(x + 1, y + 1)) == TerrainType.Water;
-        bool waterTopRight = island.TerrainTypeOfCell(new Vector2Int(x + 1, y - 1)) == TerrainType.Water;
+        bool waterFrontLeft = island.TerrainTypeOfCell(new Vector2Int(x - 1, y - 1)) == TerrainType.Water;
+        bool waterBackLeft = island.TerrainTypeOfCell(new Vector2Int(x - 1, y + 1)) == TerrainType.Water;
+        bool waterBackRight = island.TerrainTypeOfCell(new Vector2Int(x + 1, y + 1)) == TerrainType.Water;
+        bool waterFrontRight = island.TerrainTypeOfCell(new Vector2Int(x + 1, y - 1)) == TerrainType.Water;
 
         terrainViewFeature.WaterCenter = waterCenter;
-        terrainViewFeature.WaterT = waterTop;
+        terrainViewFeature.WaterF = waterFront;
         terrainViewFeature.WaterL = waterLeft;
-        terrainViewFeature.WaterD = waterDown;
+        terrainViewFeature.WaterB = waterBack;
         terrainViewFeature.WaterR = waterRight;
-        terrainViewFeature.WaterTL = waterTop && waterLeft && waterTopLeft;
-        terrainViewFeature.WaterDL = waterDown && waterLeft && waterDownLeft;
-        terrainViewFeature.WaterDR = waterDown && waterRight && waterDownRight;
-        terrainViewFeature.WaterTR = waterTop && waterRight && waterTopRight;
+        terrainViewFeature.WaterFL = waterFront && waterLeft && waterFrontLeft;
+        terrainViewFeature.WaterBL = waterBack && waterLeft && waterBackLeft;
+        terrainViewFeature.WaterBR = waterBack && waterRight && waterBackRight;
+        terrainViewFeature.WaterFR = waterFront && waterRight && waterFrontRight;
 
         return terrainViewFeature;
     }

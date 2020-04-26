@@ -77,10 +77,10 @@ public class TextureGenerator : MonoBehaviour
         int p3 = width;
 
         // Top
-        setPixel(texture, p1, p2, p2, p3, feature.WaterT ? WaterColor : GrassColor);
+        setPixel(texture, p1, p2, p2, p3, feature.WaterF ? WaterColor : GrassColor);
 
         // Down
-        setPixel(texture, p1, p2, p0, p1, feature.WaterD ? WaterColor : GrassColor);
+        setPixel(texture, p1, p2, p0, p1, feature.WaterB ? WaterColor : GrassColor);
 
         // Left
         setPixel(texture, p0, p1, p1, p2, feature.WaterL ? WaterColor : GrassColor);
@@ -90,16 +90,16 @@ public class TextureGenerator : MonoBehaviour
 
 
         // TopLeft
-        setPixel(texture, p0, p1, p2, p3, feature.WaterTL ? WaterColor : GrassColor);
+        setPixel(texture, p0, p1, p2, p3, feature.WaterFL ? WaterColor : GrassColor);
 
         // TopRight
-        setPixel(texture, p2, p3, p2, p3, feature.WaterTR ? WaterColor : GrassColor);
+        setPixel(texture, p2, p3, p2, p3, feature.WaterFR ? WaterColor : GrassColor);
 
         // DownLeft
-        setPixel(texture, p0, p1, p0, p1, feature.WaterDL ? WaterColor : GrassColor);
+        setPixel(texture, p0, p1, p0, p1, feature.WaterBL ? WaterColor : GrassColor);
 
         // DownRight
-        setPixel(texture, p2, p3, p0, p1, feature.WaterDR ? WaterColor : GrassColor);
+        setPixel(texture, p2, p3, p0, p1, feature.WaterBR ? WaterColor : GrassColor);
 
         // Center
         setPixel(texture, p1, p2, p1, p2, feature.WaterCenter ? WaterColor : GrassColor);
