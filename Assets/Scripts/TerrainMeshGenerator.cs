@@ -162,7 +162,7 @@ public class TerrainMeshGenerator : MonoBehaviour
         innerNormals[14] = normalBack;
         innerNormals[15] = normalBack;
 
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 16; i++)
         {
             innerVertices[i] = innerVertices[i] + offset;
             innerVertices[i + 16] = innerVertices[i] + bottomOffset;
@@ -176,7 +176,7 @@ public class TerrainMeshGenerator : MonoBehaviour
         innerTriangles[3] = new int[6] { 7, 6, 22, 7, 22, 23 };
         innerTriangles[4] = new int[6] { 9, 8, 24, 9, 24, 25 };
         innerTriangles[5] = new int[6] { 11, 10, 26, 11, 26, 27 };
-        innerTriangles[6] = new int[6] { 13, 12, 28, 13, 28, 19 };
+        innerTriangles[6] = new int[6] { 13, 12, 28, 13, 28, 29 };
         innerTriangles[7] = new int[6] { 15, 14, 30, 15, 30, 31 };
         innerTriangles[8] = new int[6] { 1, 14, 30, 1, 30, 17 };
         innerTriangles[9] = new int[6] { 5, 2, 18, 5, 18, 21 };
@@ -216,6 +216,12 @@ public class TerrainMeshGenerator : MonoBehaviour
         List<int> triangleList = new List<int>();
 
         if (!feature.WaterCenter)
+        {
+            mesh.triangles = triangleList.ToArray();
+            mesh.normals = normals;
+
+            return null;
+        }
 
         if (!feature.WaterF)
             triangleList.AddRange(innerTriangles[11]);
@@ -246,7 +252,7 @@ public class TerrainMeshGenerator : MonoBehaviour
         if (!feature.WaterF)
             normals[10] = normals[13] = normals[26] = normals[29] = normalBack;
         if (!feature.WaterL)
-            normals[1] = normals[14] = normals[27] = normals[30] = normalRight;
+            normals[1] = normals[14] = normals[17] = normals[30] = normalRight;
         if (!feature.WaterB)
             normals[2] = normals[5] = normals[18] = normals[21] = normalFront;
         if (!feature.WaterR)

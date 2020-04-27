@@ -23,16 +23,9 @@ public class DesignerController : MonoBehaviour
         if (GUI.Button(new Rect(50, 50, 100, 50), "Init Island"))
             initIsland();
 
-        // if (GUI.Button(new Rect(50, 160, 100, 50), "Test Texture"))
-        //     TestMesh();
+        // if (GUI.Button(new Rect(50, 160, 100, 50), "Test Mesh"))
+            // TestMesh();
     }
-
-    // private void TestMesh()
-    // {
-    //     TerrainViewFeature feature = new TerrainViewFeature(true, true, false, false, true, false, false, false, false);
-    //     Mesh mesh = TerrainMeshGenerator.Instance.GetTerrainMesh(feature);
-    //     meshFilter.sharedMesh = mesh;
-    // }
 
     private void initIsland()
     {
@@ -63,7 +56,7 @@ public class DesignerController : MonoBehaviour
     {
         // Debug.Log(position);
 
-        Vector2 posWS = new Vector2(position.x - IslandWidth / 2, - position.y + IslandHeight / 2);
+        Vector2 posWS = new Vector2(position.x - IslandWidth / 2, -position.y + IslandHeight / 2);
         grid.SetPosition(posWS);
     }
 
