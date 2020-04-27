@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum TerrainTall
 {
+    None,
     Floor,
     Second,
     Third

@@ -39,7 +39,7 @@ public class TerrainMeshGenerator : MonoBehaviour
     }
     private static Dictionary<TerrainViewFeature, Mesh> surfaceDictionary = new Dictionary<TerrainViewFeature, Mesh>(32);
     private static Dictionary<TerrainViewFeature, Mesh> innerDictionary = new Dictionary<TerrainViewFeature, Mesh>(32);
-
+    private static Dictionary<TerrainTallFeature, Mesh> outterDictionary = new Dictionary<TerrainTallFeature, Mesh>(9);
 
     private Vector3[] surfaceVertices;
     private Vector3[] surfaceNormals;
@@ -50,6 +50,11 @@ public class TerrainMeshGenerator : MonoBehaviour
     private Vector3[] innerNormals;
     private Vector2[] innerUVs;
     private int[][] innerTriangles;
+
+    private Vector3[] outterVertices;
+    private Vector3[] outterNormals;
+    private Vector2[] outterUVs;
+    private int[][] outterTriangles;
 
     private Mesh plane;
 
@@ -104,7 +109,6 @@ public class TerrainMeshGenerator : MonoBehaviour
         surfaceNormals = new Vector3[16];
         surfaceUVs = new Vector2[16];
 
-
         for (int y = 0; y < 4; y++)
             for (int x = 0; x < 4; x++)
             {
@@ -124,7 +128,7 @@ public class TerrainMeshGenerator : MonoBehaviour
         surfaceTriangles[7] = new int[6] { 9, 13, 10, 10, 13, 14 };
         surfaceTriangles[8] = new int[6] { 10, 14, 11, 11, 14, 15 };
 
-        // Bottom
+        // Inner
         innerVertices = new Vector3[32];
         innerNormals = new Vector3[32];
 
@@ -182,6 +186,53 @@ public class TerrainMeshGenerator : MonoBehaviour
         innerTriangles[9] = new int[6] { 5, 2, 18, 5, 18, 21 };
         innerTriangles[10] = new int[6] { 9, 6, 22, 9, 22, 25 };
         innerTriangles[11] = new int[6] { 13, 10, 26, 13, 26, 29 };
+
+        // Outter
+        outterVertices = new Vector3[16];
+        outterNormals = new Vector3[16];
+        outterUVs = new Vector2[16];
+
+        outterVertices[0] = new Vector3(p0, 0, p0);
+        outterVertices[1] = new Vector3(p0, 0, p0);
+        outterVertices[2] = new Vector3(p3, 0, p0);
+        outterVertices[3] = new Vector3(p3, 0, p0);
+        outterVertices[4] = new Vector3(p3, 0, p3);
+        outterVertices[5] = new Vector3(p3, 0, p3);
+        outterVertices[6] = new Vector3(p0, 0, p3);
+        outterVertices[7] = new Vector3(p0, 0, p3);
+
+        outterNormals[0] = normalLeft;
+        outterNormals[1] = normalBack;
+        outterNormals[2] = normalBack;
+        outterNormals[3] = normalRight;
+        outterNormals[4] = normalRight;
+        outterNormals[5] = normalFront;
+        outterNormals[6] = normalFront;
+        outterNormals[7] = normalLeft;
+
+        outterUVs[0] = new Vector2(1, 1);
+        outterUVs[1] = new Vector2(0, 1);
+        outterUVs[2] = new Vector2(1, 1);
+        outterUVs[3] = new Vector2(0, 1);
+        outterUVs[4] = new Vector2(1, 1);
+        outterUVs[5] = new Vector2(0, 1);
+        outterUVs[6] = new Vector2(1, 1);
+        outterUVs[7] = new Vector2(0, 1);
+
+
+        for (int i = 0; i < 8; i++)
+        {
+            outterVertices[i] = outterVertices[i] + offset;
+            outterVertices[i + 8] = outterVertices[i] + bottomOffset;
+            outterNormals[i + 8] = outterNormals[i];
+            outterUVs[i + 8] = outterUVs[i] - new Vector2(0, 1);
+        }
+
+        outterTriangles = new int[4][];
+        outterTriangles[0] = new int[6] { 1, 2, 10, 1, 10, 9 };
+        outterTriangles[1] = new int[6] { 3, 4, 12, 3, 12, 11 };
+        outterTriangles[2] = new int[6] { 5, 6, 14, 5, 14, 13 };
+        outterTriangles[3] = new int[6] { 7, 0, 8, 7, 8, 15 };
     }
 
     public Mesh GetTerrainSurfaceMesh(TerrainViewFeature feature)
@@ -204,8 +255,21 @@ public class TerrainMeshGenerator : MonoBehaviour
         return mesh;
     }
 
+    public Mesh GetTerrainOutterMesh(TerrainTallFeature feature)
+    {
+        Mesh mesh;
+        if (outterDictionary.TryGetValue(feature, out mesh))
+            return mesh;
+        mesh = generateOutterMesh(feature);
+        outterDictionary.Add(feature, mesh);
+        return mesh;
+    }
+
     private Mesh generateInnerMesh(TerrainViewFeature feature)
     {
+        if (!feature.WaterCenter)
+            return null;
+
         Mesh mesh = new Mesh();
 
         mesh.vertices = innerVertices;
@@ -215,13 +279,6 @@ public class TerrainMeshGenerator : MonoBehaviour
 
         List<int> triangleList = new List<int>();
 
-        if (!feature.WaterCenter)
-        {
-            mesh.triangles = triangleList.ToArray();
-            mesh.normals = normals;
-
-            return null;
-        }
 
         if (!feature.WaterF)
             triangleList.AddRange(innerTriangles[11]);
@@ -300,4 +357,31 @@ public class TerrainMeshGenerator : MonoBehaviour
         return mesh;
     }
 
+    private Mesh generateOutterMesh(TerrainTallFeature feature)
+    {
+        if (!feature.Front && !feature.Left && !feature.Back && !feature.Right)
+            return null;
+
+        Mesh mesh = new Mesh();
+
+        mesh.vertices = outterVertices;
+        mesh.normals = outterNormals;
+        mesh.uv = outterUVs;
+
+        List<int> triangleList = new List<int>();
+
+        if (feature.Front)
+            triangleList.AddRange(outterTriangles[2]);
+        if (feature.Left)
+            triangleList.AddRange(outterTriangles[3]);
+        if (feature.Back)
+            triangleList.AddRange(outterTriangles[0]);
+        if (feature.Right)
+            triangleList.AddRange(outterTriangles[1]);
+
+
+        mesh.triangles = triangleList.ToArray();
+
+        return mesh;
+    }
 }

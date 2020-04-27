@@ -29,11 +29,31 @@ public struct TerrainViewFeature
     }
 }
 
+public struct TerrainTallFeature
+{
+    public int Tall;
+    public bool Front;
+    public bool Left;
+    public bool Back;
+    public bool Right;
+
+    public TerrainTallFeature(int tall, bool front, bool left, bool back, bool right)
+    {
+        Tall = tall;
+        Front = front;
+        Left = left;
+        Back = back;
+        Right = right;
+    }
+}
+
 public class TerrainCellView : MonoBehaviour
 {
+    const float TALL_HEIGHT = 1.5f;
 
     public GameObject surface;
     public GameObject inner;
+    public GameObject outter;
 
     public Action<Vector2Int> OnEnter;
 
@@ -41,11 +61,13 @@ public class TerrainCellView : MonoBehaviour
 
     Vector2Int position;
 
-    TerrainViewFeature feature;
+    TerrainViewFeature viewFeature;
+    TerrainTallFeature tallFeature;
 
     MeshCollider mc;
     MeshFilter mfSurface;
     MeshFilter mfInner;
+    MeshFilter mfOutter;
 
     void OnMouseEnter()
     {
@@ -65,17 +87,28 @@ public class TerrainCellView : MonoBehaviour
         this.position = new Vector2Int(x, y);
         mfSurface = surface.GetComponent<MeshFilter>();
         mfInner = inner.GetComponent<MeshFilter>();
+        mfOutter = outter.GetComponent<MeshFilter>();
         mc = GetComponent<MeshCollider>();
         mfSurface.sharedMesh = null;
         mfInner.sharedMesh = null;
+        mfOutter.sharedMesh = null;
         mc.sharedMesh = TerrainMeshGenerator.Instance.Plane;
     }
 
-    public void SetFeature(TerrainViewFeature feature)
+    public void SetFeature(TerrainViewFeature viewFeature, TerrainTallFeature tallFeature)
     {
-        this.feature = feature;
+        this.viewFeature = viewFeature;
+        this.tallFeature = tallFeature;
 
-        mfSurface.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainSurfaceMesh(feature);
-        mfInner.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainInnerMesh(feature);
+        Vector3 position = transform.position;
+        position.y = (this.tallFeature.Tall - 1) * TALL_HEIGHT;
+        transform.position = position;
+
+        tallFeature.Tall = 0;
+
+        mfSurface.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainSurfaceMesh(viewFeature);
+        mfInner.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainInnerMesh(viewFeature);
+        mfOutter.sharedMesh = TerrainMeshGenerator.Instance.GetTerrainOutterMesh(tallFeature);
+
     }
 }

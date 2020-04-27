@@ -57,11 +57,12 @@ public class IslandView : MonoBehaviour
             OnReleaseTerrainCell(position);
     }
 
-    public void SetTerrainFeature(Vector2Int position, TerrainViewFeature feature)
+    public void SetTerrainFeature(Vector2Int position, TerrainViewFeature viewFeature, TerrainTallFeature tallFeature)
     {
         TerrainCellView terrainCellView = getCellView(position);
-        terrainCellView.SetFeature(feature);
+        terrainCellView.SetFeature(viewFeature, tallFeature);
     }
+
 
     private TerrainCellView getCellView(Vector2Int position)
     {

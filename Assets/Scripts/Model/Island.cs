@@ -51,6 +51,15 @@ public class Island
             return cell.Type;
         return TerrainType.Earth;
     }
+
+    public TerrainTall TerrainTallOfCell(Vector2Int position)
+    {
+        TerrainCell cell = getCell(position);
+        if (cell != null)
+            return cell.Tall;
+        return TerrainTall.None;
+    }
+
     public bool ChangeTerrainType(Vector2Int position, TerrainType type)
     {
         TerrainCell cell = getCell(position);
@@ -59,6 +68,15 @@ public class Island
         // TODO
         return true;
     }
+
+    public bool ChangeTerrainTall(Vector2Int position, TerrainTall tall)
+    {
+        TerrainCell cell = getCell(position);
+        cell.Tall = tall;
+
+        return true;
+    }
+
     public int PositionIndex(Vector2Int position)
     {
         int index = position.x * width + position.y;
